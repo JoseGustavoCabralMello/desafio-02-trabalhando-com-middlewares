@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const { v4: uuidv4, validate } = require('uuid');
+const { route } = require('express/lib/application');
 
 const app = express();
 app.use(express.json());
@@ -23,18 +24,18 @@ function checksExistsUserAccount(request, response, next) {
  }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  const { user } = request;
-  //const todos = user.todos;
+  // const { user } = request;
+  // //const todos = user.todos;
   
-  if(user.todos.lenght > 10){
-    return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
-  }
+  // if(user.todos.lenght > 10){
+  //   return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
+  // }
 
-  if(user.pro === false) {
-    return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
-  }
+  // if(user.pro === false) {
+  //   return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
+  // }
   
-  return next();
+  // return next();
 }
 
 function checksTodoExists(request, response, next) {
@@ -58,16 +59,19 @@ function checksTodoExists(request, response, next) {
 }
 
 function findUserById(request, response, next) {
-  // const { id } = request.params;
-  // const { user } = request;
+  const { id } = request.params;
+  //const { user } = request;
 
-  // const userId = users.find(user => user.id === id);
-  // if(!userId){
-  //   return response.status(404).json({ error: 'User not found' });
-  // }
-  // request.user = user;
+  console.log(id)
+  //console.log(user)
 
-  // return next();
+  const user = users.find(user => user.id === id);
+  if(!user){
+    return response.status(404).json({ error: 'User not found' });
+  }
+  request.user = user;
+
+  return next();
 }
 
 app.post('/users', (request, response) => {
