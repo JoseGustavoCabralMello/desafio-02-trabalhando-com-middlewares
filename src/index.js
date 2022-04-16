@@ -24,46 +24,38 @@ function checksExistsUserAccount(request, response, next) {
  }
 
 function checksCreateTodosUserAvailability(request, response, next) {
-  // const { user } = request;
-  // //const todos = user.todos;
+  const { user } = request;
+  const todos = user.todos;
   
-  // if(user.todos.lenght > 10){
-  //   return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
-  // }
+  if(!user.pro && todos.length >= 10){
+    return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
+  }
 
-  // if(user.pro === false) {
-  //   return response.status(403).json({ error: 'Number of todos has exceeded, get pro plan'})
-  // }
-  
-  // return next();
+  return next();
 }
 
 function checksTodoExists(request, response, next) {
   // const { user } = request;
-  // const { id } = request.params;
-  // const { username } = request.headers;
+  const { id } = request.params;
+  const { username } = request.headers;
 
-  // const user = users.find(user => user.username === username);
-  // if(!user) {
-  //   return response.status(404).json({ error: 'User not found' });
-  // }
-  // request.user = user;
+  const user = users.find(user => user.username === username);
+  if(!user) {
+    return response.status(404).json({ error: 'User not found' });
+  }
+  request.user = user;
 
-  // const todo = user.todos.find(todo => todo.id === id);
-  // if(!todo) {
-  //   return response.status(404).json({ error: 'Todo not found' })
-  // }
-  // request.todo = todo;
+  const todo = user.todos.find(todo => todo.id === id);
+  if(!todo) {
+    return response.status(404).json({ error: 'Todo not found' })
+  }
+  request.todo = todo;
 
-  // return next();
+  return next();
 }
 
 function findUserById(request, response, next) {
   const { id } = request.params;
-  //const { user } = request;
-
-  console.log(id)
-  //console.log(user)
 
   const user = users.find(user => user.id === id);
   if(!user){
