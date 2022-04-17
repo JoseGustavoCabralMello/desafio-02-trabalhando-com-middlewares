@@ -35,20 +35,26 @@ function checksCreateTodosUserAvailability(request, response, next) {
 }
 
 function checksTodoExists(request, response, next) {
-  // const { user } = request;
   const { id } = request.params;
   const { username } = request.headers;
+
+  // Regular expression to check if string is a valid UUID
+  const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+  const uuid = regexExp.test(id); // true
+  if(!uuid){
+    return response.status(400)
+  }
 
   const user = users.find(user => user.username === username);
   if(!user) {
     return response.status(404).json({ error: 'User not found' });
   }
-  request.user = user;
-
+  
   const todo = user.todos.find(todo => todo.id === id);
   if(!todo) {
     return response.status(404).json({ error: 'Todo not found' })
   }
+  request.user = user;
   request.todo = todo;
 
   return next();
